@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
-import pdf from 'pdf-parse';
+import pdfParse from 'pdf-parse';
 import fs from 'fs';
 
 // Importaciones de MongoDB
@@ -60,7 +60,7 @@ app.post('/api/books/upload', upload.single('pdfFile'), async (req, res) => {
 
     // 1. Parsear el PDF para extraer texto y número de páginas
     const dataBuffer = fs.readFileSync(tempPath);
-    const data = await pdf(dataBuffer);
+    const data = await pdfParse(dataBuffer);
     const extractedText = data.text;
     const totalPages = data.numpages;
 
