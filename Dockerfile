@@ -1,40 +1,38 @@
-# Build stage
-FROM node:22-alpine AS builder
-
+# Etapa 1: Construcción del Frontend
+FROM node:20-alpine AS builder
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Copiar archivos de configuración y dependencias
+COPY package.json package-lock.json ./
+RUN npm install
 
-# Install dependencies
-RUN npm ci
-
-# Copy source code
+# Copiar el código fuente
 COPY . .
 
-# Build the frontend
+# Construir el frontend (genera la carpeta dist)
 RUN npm run build
 
-# Production stage
-FROM node:22-alpine
-
+# Etapa 2: Servidor de Producción
+FROM node:20-alpine
 WORKDIR /app
 
-# Copy package files
-COPY package*.json ./
+# Instalar dependencias de producción (incluyendo las del backend)
+COPY package.json package-lock.json ./
+RUN npm install --only=production
 
-# Install only production dependencies
-RUN npm ci --only=production
-
-# Copy built frontend from builder
+# Copiar el código del backend y el frontend construido
 COPY --from=builder /app/dist ./dist
-
-# Copy server and other necessary files
 COPY server.js ./
-COPY .env.local ./
+COPY server ./server
+COPY services ./services
+COPY types.ts ./
 
-# Expose port
+# Crear el directorio de subidas y asegurar permisos
+RUN mkdir -p uploads && chown -R node:node /app
+USER node
+
+# Exponer el puerto del servidor
 EXPOSE 3001
 
-# Start the server
+# Comando de inicio
 CMD ["node", "server.js"]
