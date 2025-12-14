@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import multer from 'multer';
-import pdfParse from 'pdf-parse';
+import * as pdfParse from 'pdf-parse';
 import fs from 'fs';
 
 // Importaciones de MongoDB
