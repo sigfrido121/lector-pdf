@@ -1,0 +1,5 @@
+{
+  "name": "LiteReader AI",
+  "description": "A lightweight, resource-efficient PDF reader with persistent progress tracking, annotation capabilities, and AI-powered context search using Gemini.",
+  "requestFramePermissions": []
+}
